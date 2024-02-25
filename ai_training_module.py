@@ -28,6 +28,8 @@ model.add(tf.keras.layers.Dense(3, activation = 'sigmoid'))#output layer, for no
 
 model.compile(optimzer="adam", loss="mean_squared_error", metrics = ["accuracy"])#according to my research these optimizer and loss algorithms are best for stocks
 
-model.fit(x_train, y_train, epochs = 5000)
+model.fit(x_train, y_train, epochs = 5000)#training
+
+model.evaluate(x_test,y_test)#actual data evaluation
 
 
