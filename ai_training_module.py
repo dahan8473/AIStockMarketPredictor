@@ -15,7 +15,7 @@ from sklearn.preprocessing import MinMaxScaler#for scaling purpose
 from collections import deque
 
 #importing data file, must be in csv format
-dataset = pd.read_csv("stock_data/AAPL_stock_data.csv")
+dataset = pd.read_csv("stock_data/stock_data_initial.csv")
 #scale data
 scalar = MinMaxScaler()
 dataset['Close'] = scalar.fit_transform(np.expand_dims(dataset['Close'].values, axis=1))
@@ -72,10 +72,10 @@ def preprocessData(days):#days is a parameter to see how many days you want the 
 def getModel(x_train, y_train):
 
     model = tf.keras.models.Sequential()
-    model.add(tf.keras.layers.LSTM(512, return_sequences = True, input_shape = (SEQ_LENGTH, len(["Close"]))))#LSTM layer 1
+    model.add(tf.keras.layers.LSTM(256, return_sequences = True, input_shape = (SEQ_LENGTH, len(["Close"]))))#LSTM layer 1
     model.add(tf.keras.layers.Dropout(0.3))#hidden layer
 
-    model.add(tf.keras.layers.LSTM(1024, return_sequences = False, input_shape = (SEQ_LENGTH, len(["Close"]))))#LSTM Layer 2
+    model.add(tf.keras.layers.LSTM(256, return_sequences = False, input_shape = (SEQ_LENGTH, len(["Close"]))))#LSTM Layer 2
     model.add(tf.keras.layers.Dropout(0.3))#hidden layer
 
     model.add(tf.keras.layers.Dense(256, input_shape = x_train.shape[1:], activation = 'sigmoid')) #output Dense layer
@@ -85,7 +85,7 @@ def getModel(x_train, y_train):
 
     model.compile(optimizer ='adam', loss="mean_squared_error", metrics = ["accuracy"])#according to my research these optimizer and loss algorithms are best for stocks
 
-    model.fit(x_train, y_train, epochs = 100)#training
+    model.fit(x_train, y_train, epochs = 80)#training
     model.summary()
     return model
 #model.evaluate(x_test,y_test)#actual data evaluation
@@ -106,4 +106,5 @@ def getPrediction():
 
         predictions.append(round(float(predicted_price),2))
 
-getPrediction()
+    return predictions
+
